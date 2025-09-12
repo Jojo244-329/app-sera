@@ -81,6 +81,18 @@ app.get("/api/pagamento/:id", async (req, res) => {
   }
 });
 
+// Listar todos os pedidos
+app.get("/api/listar", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM pedidos ORDER BY id DESC");
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Erro ao listar pedidos:", err);
+    res.status(500).json({ error: "Erro ao listar pedidos" });
+  }
+});
+
+
 //
 // 📌 Rotas de Gateway (mantidas do teu código)
 //
