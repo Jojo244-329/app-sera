@@ -92,6 +92,17 @@ app.get("/api/listar", async (req, res) => {
   }
 });
 
+// Excluir pedido
+app.delete("/api/excluir/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query("DELETE FROM pedidos WHERE id = $1", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Erro ao excluir:", err);
+    res.status(500).json({ error: "Erro ao excluir" });
+  }
+});
 
 //
 // 📌 Rotas de Gateway (mantidas do teu código)
