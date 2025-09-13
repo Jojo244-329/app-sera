@@ -35,16 +35,17 @@ app.get("/api/setup", async (req, res) => {
   try {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS pedidos (
-        id SERIAL PRIMARY KEY,
-        nome VARCHAR(255),
-        email VARCHAR(255),
-        celular VARCHAR(20),
-        cpf VARCHAR(20),
-        descricao VARCHAR(255),
-        preco DECIMAL(10,2),
-        pix_manual TEXT,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(255),
+  email VARCHAR(255),
+  celular VARCHAR(20),
+  cpf VARCHAR(20),
+  descricao VARCHAR(255),
+  preco DECIMAL(10,2),
+  pix_manual TEXT,
+  boleto_manual TEXT,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
     `);
     res.json({ success: true, message: "Tabela criada" });
   } catch (err) {
@@ -56,10 +57,10 @@ app.get("/api/setup", async (req, res) => {
 // Salvar pedido (Pix manual)
 app.post("/api/salvar", async (req, res) => {
   try {
-    const { nome, email, celular, cpf, descricao, preco, pixManual } = req.body;
+    const { nome, email, celular, cpf, descricao, preco, pixManual, boletoManual } = req.body;
     const result = await pool.query(
-      "INSERT INTO pedidos (nome, email, celular, cpf, descricao, preco, pix_manual) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id",
-      [nome, email, celular, cpf, descricao, preco, pixManual]
+      "INSERT INTO pedidos (nome, email, celular, cpf, descricao, preco, pix_manual, boleto_manual) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id",
+      [nome, email, celular, cpf, descricao, preco, pixManual, boletoManual]
     );
     res.json({ success: true, id: result.rows[0].id });
   } catch (err) {
